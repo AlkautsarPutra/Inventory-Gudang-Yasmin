@@ -1,0 +1,24 @@
+@extends('layouts.app', ['title' => 'Record Inventory Transaction'])
+@section('content')
+    <div class="mb-8"><a href="{{ route('inventory-transactions.index') }}" class="text-sm font-medium text-cyan-700">← Inventory transactions</a><h1 class="mt-2 text-3xl font-bold">Record transaction</h1><p class="mt-1 text-sm text-slate-500">Ledger entries cannot be edited or deleted. Use a reversal to correct a posted entry.</p></div>
+    <form method="POST" action="{{ route('inventory-transactions.store') }}" class="max-w-4xl rounded-2xl border border-slate-200 bg-white p-6">@csrf
+        <div class="grid gap-5 md:grid-cols-2">
+            <label class="block text-sm font-medium">Transaction date<input name="transaction_date" type="datetime-local" value="{{ old('transaction_date', now()->format('Y-m-d\TH:i')) }}" max="{{ now()->format('Y-m-d\TH:i') }}" required class="mt-1 w-full rounded-lg border-slate-300"></label>
+            <label class="block text-sm font-medium">Transaction type<select id="transaction_type" name="transaction_type" required class="mt-1 w-full rounded-lg border-slate-300">@foreach($types as $type)<option value="{{ $type->value }}" @selected(old('transaction_type') === $type->value)>{{ $type->label() }}</option>@endforeach</select></label>
+            <label class="block text-sm font-medium">Product<select id="product_id" name="product_id" required class="mt-1 w-full rounded-lg border-slate-300"><option value="">Select a product</option>@foreach($products as $product)<option value="{{ $product->id }}" data-unit="{{ $product->unit }}" @selected(old('product_id') == $product->id)>{{ $product->product_code }} — {{ $product->product_name }}</option>@endforeach</select></label>
+            <label class="block text-sm font-medium">Unit<input id="unit" name="unit" value="{{ old('unit') }}" readonly required class="mt-1 w-full rounded-lg border-slate-200 bg-slate-50 text-slate-600"></label>
+            <label id="quantity_field" class="block text-sm font-medium">Quantity<input name="quantity" type="number" min="0.001" step="0.001" value="{{ old('quantity') }}" class="mt-1 w-full rounded-lg border-slate-300"></label>
+            <label id="physical_quantity_field" class="hidden text-sm font-medium">Physical quantity<input name="physical_quantity" type="number" min="0" step="0.001" value="{{ old('physical_quantity') }}" class="mt-1 w-full rounded-lg border-slate-300"><span class="mt-1 block text-xs font-normal text-slate-500">The system will calculate the adjustment difference.</span></label>
+            <label class="block text-sm font-medium">Supplier <span class="text-slate-400">(required for goods receipt)</span><select name="supplier_id" class="mt-1 w-full rounded-lg border-slate-300"><option value="">No supplier</option>@foreach($suppliers as $supplier)<option value="{{ $supplier->id }}" @selected(old('supplier_id') == $supplier->id)>{{ $supplier->supplier_code }} — {{ $supplier->getDisplayName() }}</option>@endforeach</select></label>
+            <label class="block text-sm font-medium">Reference type<input name="reference_type" value="{{ old('reference_type') }}" maxlength="30" class="mt-1 w-full rounded-lg border-slate-300" placeholder="e.g. PURCHASE_ORDER"></label>
+            <label class="block text-sm font-medium md:col-span-2">Reference number<input name="reference_number" value="{{ old('reference_number') }}" maxlength="100" class="mt-1 w-full rounded-lg border-slate-300" placeholder="e.g. PO-2026-001"></label>
+            <label class="block text-sm font-medium md:col-span-2">Notes <span id="adjustment_note" class="hidden text-rose-600">(required for stock adjustment)</span><textarea name="notes" rows="4" maxlength="5000" class="mt-1 w-full rounded-lg border-slate-300" placeholder="Provide context for this inventory movement.">{{ old('notes') }}</textarea></label>
+        </div>
+        <div class="mt-7 flex gap-3"><button class="rounded-lg bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white">Post transaction</button><a href="{{ route('inventory-transactions.index') }}" class="rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-600">Cancel</a></div>
+    </form>
+    <script>
+        const product = document.getElementById('product_id'), unit = document.getElementById('unit'), type = document.getElementById('transaction_type');
+        const updateForm = () => { unit.value = product.options[product.selectedIndex]?.dataset.unit || ''; const adjustment = type.value === 'stock_adjustment'; document.getElementById('quantity_field').classList.toggle('hidden', adjustment); document.getElementById('physical_quantity_field').classList.toggle('hidden', !adjustment); document.getElementById('adjustment_note').classList.toggle('hidden', !adjustment); };
+        product.addEventListener('change', updateForm); type.addEventListener('change', updateForm); updateForm();
+    </script>
+@endsection
