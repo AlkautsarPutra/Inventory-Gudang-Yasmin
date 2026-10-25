@@ -1,111 +1,139 @@
-@extends('layouts.app')
+@extends('layouts.app', ['title' => 'Peringatan Stok'])
 
 @section('content')
 <div class="space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-wrap items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-slate-900">Peringatan Stok</h1>
-            <p class="mt-1 text-sm text-slate-500">Daftar produk dengan stok menipis atau habis.</p>
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold uppercase tracking-wider text-rose-700">Manajemen Risiko Stok</span>
+            </div>
+            <h1 class="mt-1 font-serif text-3xl font-bold tracking-tight text-stone-900">
+                Peringatan Stok Bahan & Parfum
+            </h1>
+            <p class="text-xs text-stone-500 mt-1">Daftar bahan baku dan produk jadi yang telah menyentuh batas kritis atau ROP.</p>
         </div>
         
         <form action="{{ route('alerts.check') }}" method="POST">
             @csrf
-            <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <button type="submit" 
+                    class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-stone-900 to-stone-800 px-4 py-2.5 text-xs font-bold text-amber-300 shadow-sm hover:from-stone-800 hover:to-stone-700 hover:text-amber-200 transition">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                 </svg>
-                Periksa Stok Sekarang
+                <span>Periksa Seluruh Stok Sekarang</span>
             </button>
         </form>
     </div>
 
-    @if (session('success'))
-        <div class="rounded-lg bg-emerald-50 p-4 text-sm font-medium text-emerald-800">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+    <!-- Alert Table Card -->
+    <div class="overflow-hidden rounded-3xl border border-stone-200/80 bg-white shadow-sm">
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-slate-200">
-                <thead class="bg-slate-50">
+            <table class="min-w-full divide-y divide-stone-100 text-left text-sm">
+                <thead class="border-b border-stone-100 bg-stone-50/80 text-[11px] font-bold uppercase tracking-wider text-stone-500">
                     <tr>
-                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-slate-900 sm:pl-6">Tanggal / Waktu</th>
-                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-slate-900">Produk</th>
-                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-slate-900">Stok & Batas</th>
-                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-slate-900">Jenis Peringatan</th>
-                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-slate-900">Status</th>
-                        <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                            <span class="sr-only">Aksi</span>
-                        </th>
+                        <th class="py-4 px-6">Waktu Terdeteksi</th>
+                        <th class="py-4 px-6">Produk / Bahan</th>
+                        <th class="py-4 px-6">Klasifikasi</th>
+                        <th class="py-4 px-6 text-right">Stok Aktual / Batas</th>
+                        <th class="py-4 px-6 text-center">Tingkat Urgensi</th>
+                        <th class="py-4 px-6 text-center">Status Tindak Lanjut</th>
+                        <th class="py-4 px-6 text-right">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-200 bg-white">
+                <tbody class="divide-y divide-stone-100">
                     @forelse ($alerts as $alert)
-                        <tr>
-                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-slate-500 sm:pl-6">
-                                {{ $alert->created_at->format('d M Y H:i') }}
+                        <tr class="hover:bg-stone-50/60 transition">
+                            <td class="whitespace-nowrap py-4 px-6 text-xs text-stone-500 font-mono">
+                                {{ $alert->created_at->format('d M Y, H:i') }}
                             </td>
-                            <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                <div class="font-medium text-slate-900">{{ $alert->product?->sku ?? '-' }}</div>
-                                <div class="text-slate-500">{{ $alert->product?->name ?? 'Produk Dihapus' }}</div>
-                                <div class="mt-1">
-                                    @php
-                                        $whType = $alert->product?->warehouse_type;
-                                    @endphp
-                                    <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium {{ $whType?->color() === 'emerald' ? 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20' : 'bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-700/10' }}">
-                                        {{ $whType?->label() ?? 'Umum' }}
+
+                            <td class="py-4 px-6">
+                                <div class="font-semibold text-stone-900">{{ $alert->product?->name ?? 'Produk Dihapus' }}</div>
+                                <div class="text-xs text-stone-500 font-mono">{{ $alert->product?->sku }}</div>
+                            </td>
+
+                            <td class="py-4 px-6">
+                                @php $whType = $alert->product?->warehouse_type; @endphp
+                                <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold {{ $whType?->color() === 'emerald' ? 'bg-emerald-100 text-emerald-900' : 'bg-amber-100 text-amber-900' }}">
+                                    <span class="h-1.5 w-1.5 rounded-full {{ $whType?->color() === 'emerald' ? 'bg-emerald-500' : 'bg-amber-500' }}"></span>
+                                    {{ $whType?->label() ?? 'Umum' }}
+                                </span>
+                            </td>
+
+                            <td class="whitespace-nowrap py-4 px-6 text-right">
+                                <span class="font-bold text-stone-900 text-sm">
+                                    {{ number_format($alert->current_stock, 0, ',', '.') }} {{ $alert->product?->unit }}
+                                </span>
+                                <span class="block text-xs text-stone-400">
+                                    Batas: {{ number_format($alert->threshold, 0, ',', '.') }} {{ $alert->product?->unit }}
+                                </span>
+                            </td>
+
+                            <td class="whitespace-nowrap py-4 px-6 text-center">
+                                @if ($alert->alert_type === 'out_of_stock')
+                                    <span class="inline-flex items-center rounded-md bg-rose-100 px-2.5 py-1 text-xs font-bold text-rose-800">
+                                        Stok Habis (Kosong)
                                     </span>
-                                </div>
-                            </td>
-                            <td class="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
-                                <span class="font-semibold text-slate-900">{{ number_format($alert->current_stock, 0, ',', '.') }}</span>
-                                <span class="text-xs text-slate-400">/ {{ number_format($alert->threshold, 0, ',', '.') }}</span>
-                            </td>
-                            <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                @if ($alert->alert_type === 'below_rop')
-                                    <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20">
-                                        {{ $alert->label() }}
+                                @elseif ($alert->alert_type === 'below_safety')
+                                    <span class="inline-flex items-center rounded-md bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-700 ring-1 ring-inset ring-rose-600/20">
+                                        Di Bawah Safety Stock
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-rose-50 text-rose-700 ring-1 ring-inset ring-rose-600/20">
-                                        {{ $alert->label() }}
+                                    <span class="inline-flex items-center rounded-md bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800 ring-1 ring-inset ring-amber-600/20">
+                                        Mencapai Reorder Point (ROP)
                                     </span>
                                 @endif
                             </td>
-                            <td class="whitespace-nowrap px-3 py-4 text-sm">
+
+                            <td class="whitespace-nowrap py-4 px-6 text-center">
                                 @if ($alert->is_acknowledged)
-                                    <span class="text-emerald-600 font-medium">Selesai</span>
-                                    <div class="text-xs text-slate-500">oleh {{ $alert->acknowledgedBy?->name ?? 'Sistem' }}</div>
+                                    <div class="inline-flex items-center gap-1 text-emerald-700 font-semibold text-xs">
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                                        </svg>
+                                        <span>Telah Selesai</span>
+                                    </div>
+                                    <div class="text-[10px] text-stone-400">oleh {{ $alert->acknowledgedBy?->name ?? 'Sistem' }}</div>
                                 @else
-                                    <span class="text-rose-600 font-medium">Belum Ditindak</span>
+                                    <span class="inline-flex items-center rounded-full bg-rose-50 px-2 py-0.5 text-xs font-bold text-rose-700 ring-1 ring-rose-600/20">
+                                        Belum Ditindak
+                                    </span>
                                 @endif
                             </td>
-                            <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+
+                            <td class="whitespace-nowrap py-4 px-6 text-right">
                                 @if (!$alert->is_acknowledged)
                                     @can('record-inventory')
                                         <form action="{{ route('alerts.acknowledge', $alert) }}" method="POST" class="inline-block">
                                             @csrf
-                                            <button type="submit" class="text-blue-600 hover:text-blue-900">
-                                                Tandai Selesai
+                                            <button type="submit" 
+                                                    class="rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-bold text-stone-950 shadow-sm hover:bg-amber-400 transition">
+                                                Tandai Selesai &check;
                                             </button>
                                         </form>
                                     @endcan
+                                @else
+                                    <span class="text-xs text-stone-400">-</span>
                                 @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-3 py-8 text-center text-sm text-slate-500">
-                                Tidak ada peringatan stok.
+                            <td colspan="7" class="py-12 text-center text-sm text-stone-500">
+                                <svg class="mx-auto h-10 w-10 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                                <p class="mt-2 font-semibold text-stone-800">Tidak ada peringatan stok aktif</p>
+                                <p class="text-xs text-stone-400">Semua bahan baku dan produk jadi berada di atas batas aman.</p>
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
+
         @if ($alerts->hasPages())
-            <div class="border-t border-slate-200 px-4 py-3 sm:px-6">
+            <div class="border-t border-stone-100 bg-stone-50/50 px-6 py-4">
                 {{ $alerts->links() }}
             </div>
         @endif
