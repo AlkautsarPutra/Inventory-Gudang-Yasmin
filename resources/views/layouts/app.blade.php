@@ -161,7 +161,7 @@
                         <span class="inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
                         <span class="text-stone-700 font-semibold">Toko Parfum Yasmin Golden Care</span>
                         <span>&middot;</span>
-                        <span class="hidden sm:inline">Gudang Bahan & Produk Jadi</span>
+                        <span class="hidden sm:inline">Gudang Bahan Mentah & Produk Jadi</span>
                     </div>
                 </div>
 

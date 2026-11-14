@@ -37,7 +37,7 @@ class UpdateUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
             'role' => ['required', new Enum(UserRole::class)],
-            'password' => ['nullable', 'confirmed', Password::min(12)],
+            'password' => ['nullable', 'confirmed', Password::min(8)],
         ];
     }
 }

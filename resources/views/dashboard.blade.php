@@ -101,7 +101,7 @@
         <!-- 1. Gudang Bahan Mentah (Raw Material) -->
         <div class="rounded-3xl border border-amber-200/80 bg-gradient-to-br from-amber-50/80 via-white to-amber-50/30 p-5 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between">
-                <span class="text-xs font-bold tracking-wider uppercase text-amber-800">Bahan Baku & Botol</span>
+                <span class="text-xs font-bold tracking-wider uppercase text-amber-800">Gudang Bahan Mentah</span>
                 <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500 text-stone-950 shadow-sm shadow-amber-500/20">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.942A4.5 4.5 0 0 1 15.908 17H8.092a4.5 4.5 0 0 1-2.322-.758L4.2 15.3m15.6 0v2.7A2.25 2.25 0 0 1 17.55 20.25H6.45A2.25 2.25 0 0 1 4.2 18V15.3" />
@@ -109,7 +109,7 @@
                 </div>
             </div>
             <p class="mt-4 font-serif text-3xl font-bold text-stone-900">{{ $rawMaterialCount }}</p>
-            <p class="text-xs text-stone-500 mt-0.5">Bibit, Pelarut & Kemasan</p>
+            <p class="text-xs text-stone-500 mt-0.5">Bibit Parfum, Pelarut & Kemasan</p>
 
             <div class="mt-4 flex items-center justify-between border-t border-amber-200/60 pt-3 text-xs">
                 <span class="text-stone-600">Aman: <strong class="text-stone-900">{{ $rawMaterialCount - $rawMaterialLowStockCount }}</strong></span>
@@ -126,7 +126,7 @@
         <!-- 2. Gudang Produk Jadi (Finished Goods) -->
         <div class="rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/30 p-5 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between">
-                <span class="text-xs font-bold tracking-wider uppercase text-emerald-800">Parfum Jadi (EDP)</span>
+                <span class="text-xs font-bold tracking-wider uppercase text-emerald-800">Gudang Produk Jadi</span>
                 <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-sm shadow-emerald-600/20">
                     <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 3h6v3H9z"/>
@@ -137,7 +137,7 @@
                 </div>
             </div>
             <p class="mt-4 font-serif text-3xl font-bold text-stone-900">{{ $finishedGoodsCount }}</p>
-            <p class="text-xs text-stone-500 mt-0.5">Eau de Parfum & Roll-On</p>
+            <p class="text-xs text-stone-500 mt-0.5">Parfum Jadi (EDP & Roll-On)</p>
 
             <div class="mt-4 flex items-center justify-between border-t border-emerald-200/60 pt-3 text-xs">
                 <span class="text-stone-600">Aman: <strong class="text-stone-900">{{ $finishedGoodsCount - $finishedGoodsLowStockCount }}</strong></span>
@@ -219,7 +219,7 @@
                                     {{ $product->product_name }}
                                 </span>
                                 <span class="rounded px-1.5 py-0.5 text-[10px] font-semibold {{ $product->isRawMaterial() ? 'bg-amber-100 text-amber-900' : 'bg-emerald-100 text-emerald-900' }}">
-                                    {{ $product->isRawMaterial() ? 'Bahan Mentah' : 'Produk Jadi' }}
+                                    {{ $product->isRawMaterial() ? 'Gudang Bahan Mentah' : 'Gudang Produk Jadi' }}
                                 </span>
                             </div>
                             <p class="text-xs text-stone-500 font-mono mt-0.5">

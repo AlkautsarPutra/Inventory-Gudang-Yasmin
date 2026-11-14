@@ -116,13 +116,22 @@
 
                             <td class="py-4 px-6 text-right">
                                 @can('manage-master-data')
-                                    <a href="{{ route('products.edit', $product) }}" 
-                                       class="inline-flex items-center gap-1 rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-semibold text-stone-700 hover:border-amber-400 hover:bg-amber-50/50 hover:text-amber-900 transition">
-                                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
-                                        </svg>
-                                        <span>Ubah</span>
-                                    </a>
+                                    <div class="inline-flex items-center gap-2">
+                                        <a href="{{ route('products.edit', $product) }}" 
+                                           class="inline-flex items-center gap-1 rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-semibold text-stone-700 hover:border-amber-400 hover:bg-amber-50/50 hover:text-amber-900 transition">
+                                            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                            </svg>
+                                            <span>Ubah</span>
+                                        </a>
+                                        <form method="POST" action="{{ route('products.destroy', $product) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus / menonaktifkan produk ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="rounded-lg border border-rose-200 px-2.5 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-50 transition" title="Hapus / Nonaktifkan">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
                                 @endcan
                             </td>
                         </tr>

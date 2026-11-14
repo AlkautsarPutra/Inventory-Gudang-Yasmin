@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function (): void {
 
     Route::middleware('can:manage-users')->group(function (): void {
         Route::resource('users', UserController::class)->only([
-            'index', 'create', 'store', 'edit', 'update',
+            'index', 'create', 'store', 'edit', 'update', 'destroy',
         ]);
     });
 });

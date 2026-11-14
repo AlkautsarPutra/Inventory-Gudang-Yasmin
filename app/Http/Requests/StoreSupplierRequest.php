@@ -139,20 +139,20 @@ class StoreSupplierRequest extends FormRequest
             'supplier_code' => strtoupper(trim((string) $this->supplier_code)),
             'supplier_name' => trim((string) $this->supplier_name),
             'company_name' => trim((string) $this->company_name),
-            'tax_identification_number' => trim((string) $this->tax_identification_number),
+            'tax_identification_number' => $this->filled('tax_identification_number') ? trim((string) $this->tax_identification_number) : null,
             'contact_person' => trim((string) $this->contact_person),
-            'phone_number' => trim((string) $this->phone_number),
-            'mobile_number' => trim((string) $this->mobile_number),
-            'email' => $this->email
+            'phone_number' => $this->filled('phone_number') ? trim((string) $this->phone_number) : null,
+            'mobile_number' => $this->filled('mobile_number') ? trim((string) $this->mobile_number) : null,
+            'email' => $this->filled('email')
                 ? strtolower(trim((string) $this->email))
                 : null,
-            'website' => $this->website
+            'website' => $this->filled('website')
                 ? trim((string) $this->website)
                 : null,
-            'street_address' => trim((string) $this->street_address),
-            'city' => trim((string) $this->city),
-            'province' => trim((string) $this->province),
-            'postal_code' => trim((string) $this->postal_code),
+            'street_address' => $this->filled('street_address') ? trim((string) $this->street_address) : null,
+            'city' => $this->filled('city') ? trim((string) $this->city) : null,
+            'province' => $this->filled('province') ? trim((string) $this->province) : null,
+            'postal_code' => $this->filled('postal_code') ? trim((string) $this->postal_code) : null,
             'country' => trim((string) $this->country),
             'supplier_category' => trim((string) $this->supplier_category),
             'business_type' => trim((string) $this->business_type),

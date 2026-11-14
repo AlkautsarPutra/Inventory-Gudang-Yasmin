@@ -54,7 +54,7 @@ class UpdateInventoryTransactionRequest extends FormRequest
             'transaction_date' => [
                 'required',
                 'date',
-                'before_or_equal:today',
+                'before_or_equal:now',
             ],
 
             'product_id' => [

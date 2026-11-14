@@ -65,10 +65,19 @@
 
                             <td class="py-4 px-6 text-right">
                                 @can('manage-master-data')
-                                    <a href="{{ route('suppliers.edit', $supplier) }}" 
-                                       class="inline-flex items-center gap-1 rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-semibold text-stone-700 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900 transition">
-                                        <span>Ubah</span>
-                                    </a>
+                                    <div class="inline-flex items-center gap-2">
+                                        <a href="{{ route('suppliers.edit', $supplier) }}" 
+                                           class="inline-flex items-center gap-1 rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-semibold text-stone-700 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900 transition">
+                                            <span>Ubah</span>
+                                        </a>
+                                        <form method="POST" action="{{ route('suppliers.destroy', $supplier) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus / menonaktifkan supplier {{ $supplier->getDisplayName() }}?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="rounded-lg border border-rose-200 px-2.5 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-50 transition" title="Hapus / Nonaktifkan">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
                                 @endcan
                             </td>
                         </tr>

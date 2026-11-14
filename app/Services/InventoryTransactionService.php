@@ -158,6 +158,8 @@ class InventoryTransactionService
                 'quantity' => $this->fromMilliunits($currentQuantity + $signedQuantity),
             ])->save();
 
+            $product->load('inventoryStock');
+
             try {
                 app(\App\Services\StockAlertService::class)->checkProductStock($product);
             } catch (\Throwable) {}
@@ -226,6 +228,8 @@ class InventoryTransactionService
             $stock->forceFill([
                 'quantity' => $this->fromMilliunits($currentQuantity + $signedQuantity),
             ])->save();
+
+            $product->load('inventoryStock');
 
             try {
                 app(\App\Services\StockAlertService::class)->checkProductStock($product);

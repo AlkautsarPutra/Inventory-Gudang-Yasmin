@@ -61,13 +61,22 @@ class ProductService
     }
 
     /**
-     * Delete a product.
+     * Delete a product. Permanently delete if no ledger transactions, otherwise mark as inactive.
      */
-    public function delete(Product $product): void
+    public function delete(Product $product): string
     {
-        DB::transaction(
-            static function () use ($product): void {
+        return DB::transaction(
+            static function () use ($product): string {
+                if ($product->inventoryTransactions()->count() === 0) {
+                    $product->inventoryStock()?->delete();
+                    $product->demandForecasts()?->delete();
+                    \App\Models\StockAlert::where('product_id', $product->id)->delete();
+                    $product->delete();
+                    return 'deleted';
+                }
+
                 $product->update(['status' => ProductStatus::INACTIVE]);
+                return 'deactivated';
             }
         );
     }

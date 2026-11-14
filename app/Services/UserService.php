@@ -34,4 +34,9 @@ class UserService
             return $user->refresh();
         });
     }
+
+    public function delete(User $user): void
+    {
+        DB::transaction(static fn (): bool => (bool) $user->delete());
+    }
 }

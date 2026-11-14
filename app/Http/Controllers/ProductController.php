@@ -91,10 +91,14 @@ class ProductController extends Controller
      */
     public function destroy(Product $product): RedirectResponse
     {
-        $this->productService->delete($product);
+        $status = $this->productService->delete($product);
+
+        $message = $status === 'deleted'
+            ? 'Produk berhasil dihapus secara permanen.'
+            : 'Produk dinonaktifkan karena telah memiliki riwayat transaksi mutasi.';
 
         return redirect()
             ->route('products.index')
-            ->with('success', 'Product deactivated successfully.');
+            ->with('success', $message);
     }
 }

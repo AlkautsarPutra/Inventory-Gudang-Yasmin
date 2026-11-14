@@ -93,7 +93,7 @@ class Product extends Model
      */
     public function needsReorder(int $currentStock): bool
     {
-        return $currentStock <= $this->reorder_point;
+        return $this->isActive() && $this->reorder_point > 0 && $currentStock <= $this->reorder_point;
     }
 
     public function scopeRawMaterial(Builder $query): Builder

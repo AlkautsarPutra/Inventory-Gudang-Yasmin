@@ -84,10 +84,14 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier): RedirectResponse
     {
-        $this->supplierService->delete($supplier);
+        $status = $this->supplierService->delete($supplier);
+
+        $message = $status === 'deleted'
+            ? 'Supplier berhasil dihapus secara permanen.'
+            : 'Supplier dinonaktifkan karena telah memiliki riwayat transaksi mutasi.';
 
         return redirect()
             ->route('suppliers.index')
-            ->with('success', 'Supplier deactivated successfully.');
+            ->with('success', $message);
     }
 }

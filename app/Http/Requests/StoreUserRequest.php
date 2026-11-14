@@ -32,7 +32,7 @@ class StoreUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'role' => ['required', new Enum(UserRole::class)],
-            'password' => ['required', 'confirmed', Password::min(12)],
+            'password' => ['required', 'confirmed', Password::min(8)],
         ];
     }
 }

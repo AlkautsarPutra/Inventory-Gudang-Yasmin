@@ -68,13 +68,19 @@ class SupplierService
     }
 
     /**
-     * Delete a supplier.
+     * Delete a supplier. Permanently delete if no ledger transactions, otherwise mark as inactive.
      */
-    public function delete(Supplier $supplier): void
+    public function delete(Supplier $supplier): string
     {
-        DB::transaction(
-            static function () use ($supplier): void {
+        return DB::transaction(
+            static function () use ($supplier): string {
+                if ($supplier->inventoryTransactions()->count() === 0) {
+                    $supplier->delete();
+                    return 'deleted';
+                }
+
                 $supplier->update(['status' => SupplierStatus::INACTIVE]);
+                return 'deactivated';
             }
         );
     }

@@ -114,7 +114,7 @@ class StoreProductRequest extends FormRequest
         $this->merge([
             'product_code' => strtoupper(trim((string) $this->product_code)),
             'product_name' => trim((string) $this->product_name),
-            'description' => trim((string) $this->description),
+            'description' => $this->filled('description') ? trim((string) $this->description) : null,
             'category' => trim((string) $this->category),
             'brand' => trim((string) $this->brand),
             'unit' => strtoupper(trim((string) $this->unit)),
